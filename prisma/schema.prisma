@@ -1,0 +1,208 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  MANAGER
+  STAFF
+}
+
+model User {
+  id           String    @id @default(cuid())
+  name         String
+  email        String    @unique
+  passwordHash String
+  role         Role      @default(STAFF)
+  phone        String?
+  avatar       String?
+  department   String?
+  timezone     String?   @default("Asia/Kolkata")
+  currency     String?   @default("₹ INR")
+  status       String    @default("active")
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  blogs        Blog[]
+
+  @@map("users")
+}
+
+model Category {
+  id           String     @id @default(cuid())
+  name         String
+  slug         String     @unique
+  icon         String?
+  image        String?
+  description  String?
+  displayOrder Int        @default(0)
+  status       String     @default("active")
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  menuItems    MenuItem[]
+
+  @@map("categories")
+}
+
+model MenuItem {
+  id           String    @id @default(cuid())
+  name         String
+  categoryId   String
+  category     Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  price        Float
+  description  String?
+  image        String?
+  isFeatured   Boolean   @default(false)
+  isPopular    Boolean   @default(false)
+  availability String    @default("in_stock")
+  dietary      String    @default("veg")
+  displayOrder Int       @default(0)
+  rating       Float     @default(4.8)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([categoryId])
+  @@map("menu_items")
+}
+
+model Centre {
+  id                  String    @id @default(cuid())
+  name                String
+  slug                String    @unique
+  coverImage          String?
+  galleryImages       String[]  @default([])
+  shortDescription    String?
+  detailedDescription String?
+  status              String    @default("active")
+  isFeatured          Boolean   @default(false)
+  country             String    @default("India")
+  state               String
+  city                String
+  locality            String?
+  address             String
+  postalCode          String?
+  latitude            Float?
+  longitude           Float?
+  contactNumber       String?
+  email               String?
+  whatsappNumber      String?
+  websiteUrl          String?
+  timings             Json?
+  holidayHours        String?
+  averageRating       Float     @default(4.8)
+  reviewCount         Int       @default(0)
+  facilities          String[]  @default([])
+  faqs                Json?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  reviews             Review[]
+
+  @@index([city])
+  @@map("centres")
+}
+
+model Review {
+  id                String    @id @default(cuid())
+  reviewerName      String
+  reviewerAvatar    String?
+  reviewText        String
+  starRating        Int       @default(5)
+  reviewerRole      String?
+  relatedCentreId   String?
+  relatedCentre     Centre?   @relation(fields: [relatedCentreId], references: [id], onDelete: SetNull)
+  relatedCentreName String?
+  reviewType        String    @default("customer")
+  displayOn         String[]  @default(["homepage"])
+  isFeatured        Boolean   @default(false)
+  displayOrder      Int       @default(0)
+  status            String    @default("published")
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@index([relatedCentreId])
+  @@map("reviews")
+}
+
+model Blog {
+  id                String    @id @default(cuid())
+  title             String
+  slug              String    @unique
+  coverImage        String?
+  category          String    @default("Chai Culture")
+  excerpt           String?
+  authorId          String?
+  authorUser        User?     @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  author            String?
+  authorDesignation String?
+  authorAvatar      String?
+  readingTime       String?   @default("4 min read")
+  content           String
+  seoTitle          String?
+  metaDescription   String?
+  seoKeywords       String?
+  publishDate       DateTime  @default(now())
+  status            String    @default("published")
+  isFeatured        Boolean   @default(false)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@map("blogs")
+}
+
+model Offer {
+  id                 String    @id @default(cuid())
+  title              String
+  bannerImage        String?
+  shortDescription   String?
+  detailedDescription String?
+  applicableCategory String?
+  discountType       String    @default("percentage")
+  discountValue      Float
+  startDate          DateTime
+  endDate            DateTime
+  promoCode          String?
+  applicableCentres  String    @default("all")
+  isFeatured         Boolean   @default(false)
+  displayOrder       Int       @default(0)
+  status             String    @default("active")
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@map("offers")
+}
+
+model FranchiseEnquiry {
+  id        String   @id @default(cuid())
+  fullName  String
+  mobile    String
+  email     String
+  city      String
+  state     String
+  budget    String
+  status    String   @default("new")
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("franchise_enquiries")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  title     String
+  message   String
+  type      String   @default("info")
+  isRead    Boolean  @default(false)
+  link      String?
+  createdAt DateTime @default(now())
+
+  @@map("notifications")
+}
