@@ -82,6 +82,7 @@ export const createApp = (): Application => {
         offers: '/api/v1/offers',
         enquiries: '/api/v1/enquiries',
         dashboard: '/api/v1/dashboard',
+        upload: '/api/v1/upload',
       },
     });
   });

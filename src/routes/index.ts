@@ -8,6 +8,7 @@ import blogRoutes from './blog.routes';
 import offerRoutes from './offer.routes';
 import enquiryRoutes from './enquiry.routes';
 import dashboardRoutes from './dashboard.routes';
+import uploadRoutes from './upload.routes';
 
 const router = Router();
 
@@ -21,5 +22,6 @@ router.use('/blogs', blogRoutes);
 router.use('/offers', offerRoutes);
 router.use('/enquiries', enquiryRoutes);
 router.use('/dashboard', dashboardRoutes);
+router.use('/upload', uploadRoutes);
 
 export default router;

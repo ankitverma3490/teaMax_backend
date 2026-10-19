@@ -13,5 +13,16 @@ export const config = {
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
   corsOrigins: (process.env.CORS_ORIGIN || 'http://localhost:5173,http://localhost:3000,http://localhost:3001')
     .split(',')
-    .map(origin => origin.trim())
+    .map(origin => origin.trim()),
+  cloudinary: {
+    cloudName: process.env.CLOUDINARY_CLOUD_NAME || 'teamax',
+    apiKey: process.env.CLOUDINARY_API_KEY || '116745355719353',
+    apiSecret: process.env.CLOUDINARY_API_SECRET || '',
+    isConfigured: Boolean(
+      process.env.CLOUDINARY_CLOUD_NAME &&
+      process.env.CLOUDINARY_API_KEY &&
+      process.env.CLOUDINARY_API_SECRET &&
+      process.env.CLOUDINARY_API_SECRET !== 'your_regenerated_api_secret'
+    ),
+  },
 };
