@@ -5,13 +5,14 @@ import { sendSuccess } from '../utils/apiResponse';
 export class ReviewController {
   static async getAll(req: Request, res: Response, next: NextFunction) {
     try {
-      const { reviewType, relatedCentreId, isFeatured, status } = req.query;
+      const { reviewType, relatedCentreId, isFeatured, status, displayOn } = req.query;
 
       const reviews = await ReviewService.getAll({
         reviewType: reviewType as string,
         relatedCentreId: relatedCentreId as string,
         isFeatured: isFeatured ? isFeatured === 'true' : undefined,
         status: status as string,
+        displayOn: displayOn as string,
       });
 
       return sendSuccess(res, reviews, 'Reviews fetched successfully');

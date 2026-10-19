@@ -7,6 +7,7 @@ export class ReviewService {
     relatedCentreId?: string;
     isFeatured?: boolean;
     status?: string;
+    displayOn?: string;
   }) {
     const where: any = {};
 
@@ -21,6 +22,9 @@ export class ReviewService {
     }
     if (filters.status) {
       where.status = filters.status;
+    }
+    if (filters.displayOn) {
+      where.displayOn = { has: filters.displayOn };
     }
 
     return prisma.review.findMany({
