@@ -20,11 +20,15 @@ export const createCentreSchema = z.object({
   contactNumber: z.string().optional().nullable(),
   email: z.string().email().optional().or(z.literal('')).nullable(),
   whatsappNumber: z.string().optional().nullable(),
-  websiteUrl: z.string().url().optional().or(z.literal('')).nullable(),
+  websiteUrl: z.string().optional().or(z.literal('')).nullable(),
+  mapUrl: z.string().optional().or(z.literal('')).nullable(),
+  googleMapUrl: z.string().optional().or(z.literal('')).nullable(),
+  swiggyUrl: z.string().optional().or(z.literal('')).nullable(),
+  zomatoUrl: z.string().optional().or(z.literal('')).nullable(),
   timings: z.record(z.any()).optional().nullable(),
   holidayHours: z.string().optional().nullable(),
   facilities: z.array(z.string()).optional().default([]),
-  faqs: z.array(z.record(z.any())).optional().nullable(),
+  faqs: z.any().optional().nullable(),
 });
 
 export const updateCentreSchema = createCentreSchema.partial();

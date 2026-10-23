@@ -87,7 +87,16 @@ export class CentreService {
     return this.getById(slug);
   }
 
-  static async create(data: any) {
+  static async create(rawData: any) {
+    const data = { ...rawData };
+    if (data.mapUrl && !data.googleMapUrl) {
+      data.googleMapUrl = data.mapUrl;
+    } else if (data.googleMapUrl && !data.mapUrl) {
+      data.mapUrl = data.googleMapUrl;
+    }
+    if (typeof data.latitude === 'string') data.latitude = parseFloat(data.latitude) || null;
+    if (typeof data.longitude === 'string') data.longitude = parseFloat(data.longitude) || null;
+
     const existing = await prisma.centre.findUnique({
       where: { slug: data.slug },
     });
@@ -98,8 +107,18 @@ export class CentreService {
     return prisma.centre.create({ data });
   }
 
-  static async update(id: string, data: any) {
+  static async update(id: string, rawData: any) {
     await this.getById(id);
+    const { id: _id, createdAt: _created, updatedAt: _updated, reviews: _reviews, _count: _count, ...data } = rawData;
+    
+    if (data.mapUrl !== undefined && data.googleMapUrl === undefined) {
+      data.googleMapUrl = data.mapUrl;
+    } else if (data.googleMapUrl !== undefined && data.mapUrl === undefined) {
+      data.mapUrl = data.googleMapUrl;
+    }
+    if (typeof data.latitude === 'string') data.latitude = parseFloat(data.latitude) || null;
+    if (typeof data.longitude === 'string') data.longitude = parseFloat(data.longitude) || null;
+
     return prisma.centre.update({
       where: { id },
       data,

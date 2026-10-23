@@ -94,6 +94,10 @@ model Centre {
   email               String?
   whatsappNumber      String?
   websiteUrl          String?
+  mapUrl              String?
+  googleMapUrl        String?
+  swiggyUrl           String?
+  zomatoUrl           String?
   timings             Json?
   holidayHours        String?
   averageRating       Float     @default(4.8)

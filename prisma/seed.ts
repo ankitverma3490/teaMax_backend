@@ -384,6 +384,10 @@ async function main() {
       email: 'gachibowli@teamaxcafe.com',
       whatsappNumber: '+91 98765 43211',
       websiteUrl: '',
+      mapUrl: 'https://maps.google.com/?q=17.4401,78.3489',
+      googleMapUrl: 'https://maps.google.com/?q=17.4401,78.3489',
+      swiggyUrl: 'https://www.swiggy.com/city/hyderabad/teamax-cafe-gachibowli',
+      zomatoUrl: 'https://www.zomato.com/hyderabad/teamax-cafe-gachibowli',
       timings: {
         monday: { open: '07:00', close: '23:00', isClosed: false },
         sunday: { open: '07:00', close: '23:00', isClosed: false },
