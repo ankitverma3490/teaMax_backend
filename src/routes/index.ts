@@ -9,6 +9,7 @@ import offerRoutes from './offer.routes';
 import enquiryRoutes from './enquiry.routes';
 import dashboardRoutes from './dashboard.routes';
 import uploadRoutes from './upload.routes';
+import settingRoutes from './setting.routes';
 
 const router = Router();
 
@@ -23,5 +24,6 @@ router.use('/offers', offerRoutes);
 router.use('/enquiries', enquiryRoutes);
 router.use('/dashboard', dashboardRoutes);
 router.use('/upload', uploadRoutes);
+router.use('/settings', settingRoutes);
 
 export default router;
