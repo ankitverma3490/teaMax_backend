@@ -218,3 +218,40 @@ model SiteSetting {
 
   @@map("site_settings")
 }
+
+model FranchiseOpportunity {
+  id               String    @id @default(cuid())
+  franchiseName    String
+  slug             String    @unique
+  country          String    @default("India")
+  state            String
+  city             String
+  status           String    @default("active")
+  isFeatured       Boolean   @default(true)
+  minBudget        String?   @default("₹3.69 Lakhs*")
+  spaceRequired    String?   @default("100 – 200 sq.ft")
+  timelineDays     String?   @default("25 – 30 Days")
+  royalty          String?   @default("Zero Royalty (100% Profits to You)")
+  margins          String?   @default("55% – 65% Gross Margins")
+  primaryImage     String?
+  shortDescription String?
+  description      String?
+  editorialLead    String?
+  editorialBody    String?
+  primeLocations   Json?     @default("[]")
+  faqs             Json?     @default("[]")
+  seoTitle         String?
+  metaDescription  String?
+  seoKeywords      String?
+  applicantCount   Int       @default(0)
+  inquiries        Json?     @default("[]")
+  displayOrder     Int       @default(0)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([city])
+  @@index([state])
+  @@index([status])
+  @@map("franchise_opportunities")
+}
+

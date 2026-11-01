@@ -10,6 +10,7 @@ import enquiryRoutes from './enquiry.routes';
 import dashboardRoutes from './dashboard.routes';
 import uploadRoutes from './upload.routes';
 import settingRoutes from './setting.routes';
+import franchiseOpportunityRoutes from './franchiseOpportunity.routes';
 
 const router = Router();
 
@@ -25,5 +26,6 @@ router.use('/enquiries', enquiryRoutes);
 router.use('/dashboard', dashboardRoutes);
 router.use('/upload', uploadRoutes);
 router.use('/settings', settingRoutes);
+router.use('/franchise-opportunities', franchiseOpportunityRoutes);
 
 export default router;

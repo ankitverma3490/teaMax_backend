@@ -4,7 +4,7 @@ import { sendSuccess } from '../utils/apiResponse';
 import { AppError } from '../middleware/error.middleware';
 
 // Allowed setting keys (whitelist)
-const ALLOWED_KEYS = ['moments'];
+const ALLOWED_KEYS = ['moments', 'franchise_opportunities'];
 
 export class SettingController {
   /** GET /settings/:key  — public */
