@@ -124,6 +124,9 @@ model Review {
   relatedCentre     Centre?   @relation(fields: [relatedCentreId], references: [id], onDelete: SetNull)
   relatedCentreName String?
   reviewType        String    @default("customer")
+  categoryId        String?   @default("customer")
+  viewMoreLink      String?
+  viewMoreLinkName  String?   @default("Read more")
   displayOn         String[]  @default(["homepage"])
   isFeatured        Boolean   @default(false)
   displayOrder      Int       @default(0)

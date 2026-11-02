@@ -4,27 +4,45 @@ import { AppError } from '../middleware/error.middleware';
 export class ReviewService {
   static async getAll(filters: {
     reviewType?: string;
+    categoryId?: string;
     relatedCentreId?: string;
     isFeatured?: boolean;
     status?: string;
     displayOn?: string;
+    search?: string;
   }) {
     const where: any = {};
 
-    if (filters.reviewType) {
-      where.reviewType = filters.reviewType;
+    if (filters.categoryId && filters.categoryId !== 'all') {
+      where.OR = [
+        { categoryId: filters.categoryId },
+        { reviewType: filters.categoryId },
+      ];
+    } else if (filters.reviewType && filters.reviewType !== 'all') {
+      where.OR = [
+        { reviewType: filters.reviewType },
+        { categoryId: filters.reviewType },
+      ];
     }
+
     if (filters.relatedCentreId) {
       where.relatedCentreId = filters.relatedCentreId;
     }
     if (filters.isFeatured !== undefined) {
       where.isFeatured = filters.isFeatured;
     }
-    if (filters.status) {
+    if (filters.status && filters.status !== 'all') {
       where.status = filters.status;
     }
     if (filters.displayOn) {
       where.displayOn = { has: filters.displayOn };
+    }
+    if (filters.search) {
+      where.OR = [
+        { reviewerName: { contains: filters.search, mode: 'insensitive' } },
+        { reviewText: { contains: filters.search, mode: 'insensitive' } },
+        { reviewerRole: { contains: filters.search, mode: 'insensitive' } },
+      ];
     }
 
     return prisma.review.findMany({
@@ -51,13 +69,27 @@ export class ReviewService {
     return review;
   }
 
-  static async create(data: any) {
-    if (data.relatedCentreId && !data.relatedCentreName) {
+  static async create(rawData: any) {
+    const data = { ...rawData };
+
+    if (!data.categoryId && data.reviewType) {
+      data.categoryId = data.reviewType;
+    }
+    if (!data.reviewType && data.categoryId) {
+      data.reviewType = data.categoryId;
+    }
+
+    // Clean relatedCentreId if empty or invalid
+    if (!data.relatedCentreId) {
+      delete data.relatedCentreId;
+    } else {
       const centre = await prisma.centre.findUnique({
         where: { id: data.relatedCentreId },
       });
       if (centre) {
         data.relatedCentreName = centre.name;
+      } else {
+        delete data.relatedCentreId;
       }
     }
 
@@ -69,8 +101,27 @@ export class ReviewService {
     });
   }
 
-  static async update(id: string, data: any) {
+  static async update(id: string, rawData: any) {
     await this.getById(id);
+    const { id: _id, createdAt: _created, updatedAt: _updated, relatedCentre: _centre, ...data } = rawData;
+
+    if (data.categoryId && !data.reviewType) {
+      data.reviewType = data.categoryId;
+    }
+
+    if (data.relatedCentreId === '' || data.relatedCentreId === null) {
+      data.relatedCentreId = null;
+    } else if (data.relatedCentreId) {
+      const centre = await prisma.centre.findUnique({
+        where: { id: data.relatedCentreId },
+      });
+      if (centre) {
+        data.relatedCentreName = centre.name;
+      } else {
+        data.relatedCentreId = null;
+      }
+    }
+
     return prisma.review.update({
       where: { id },
       data,
