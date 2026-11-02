@@ -45,42 +45,44 @@ export class CentreService {
   static async getById(id: string) {
     let centre = await prisma.centre.findUnique({
       where: { id },
-      include: {
-        reviews: {
-          where: { status: 'published' },
-          take: 10,
-          orderBy: { createdAt: 'desc' },
-        },
-      },
     });
     if (!centre) {
       centre = await prisma.centre.findUnique({
         where: { slug: id },
-        include: {
-          reviews: {
-            where: { status: 'published' },
-            take: 10,
-            orderBy: { createdAt: 'desc' },
-          },
-        },
       });
     }
     if (!centre) {
       centre = await prisma.centre.findFirst({
         where: { status: 'active' },
-        include: {
-          reviews: {
-            where: { status: 'published' },
-            take: 10,
-            orderBy: { createdAt: 'desc' },
-          },
-        },
       });
     }
     if (!centre) {
       throw new AppError('Centre not found', 404);
     }
-    return centre;
+
+    // Include centre-specific reviews + any featured customer reviews, ordered with featured first
+    const centreReviews = await prisma.review.findMany({
+      where: {
+        status: 'published',
+        OR: [
+          { relatedCentreId: centre.id },
+          {
+            isFeatured: true,
+            OR: [
+              { reviewType: 'customer' },
+              { categoryId: 'customer' },
+            ],
+          },
+        ],
+      },
+      orderBy: [{ isFeatured: 'desc' }, { displayOrder: 'asc' }, { createdAt: 'desc' }],
+      take: 10,
+    });
+
+    return {
+      ...centre,
+      reviews: centreReviews,
+    };
   }
 
   static async getBySlug(slug: string) {

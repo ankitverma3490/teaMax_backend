@@ -47,7 +47,7 @@ export class ReviewService {
 
     return prisma.review.findMany({
       where,
-      orderBy: [{ displayOrder: 'asc' }, { createdAt: 'desc' }],
+      orderBy: [{ isFeatured: 'desc' }, { displayOrder: 'asc' }, { createdAt: 'desc' }],
       include: {
         relatedCentre: {
           select: { id: true, name: true, city: true, slug: true },
