@@ -28,7 +28,11 @@ export class BlogService {
 
     return prisma.blog.findMany({
       where,
-      orderBy: { publishDate: 'desc' },
+      orderBy: [
+        { isFeatured: 'desc' },
+        { publishDate: 'desc' },
+        { createdAt: 'desc' },
+      ],
     });
   }
 
@@ -76,11 +80,12 @@ export class BlogService {
 
   static async update(id: string, data: any) {
     await this.getById(id);
+    const { id: _id, authorUser, createdAt, updatedAt, ...cleanData } = data;
     return prisma.blog.update({
       where: { id },
       data: {
-        ...data,
-        publishDate: data.publishDate ? new Date(data.publishDate) : undefined,
+        ...cleanData,
+        publishDate: cleanData.publishDate ? new Date(cleanData.publishDate) : undefined,
       },
     });
   }
