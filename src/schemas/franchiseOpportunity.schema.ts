@@ -23,7 +23,7 @@ export const createFranchiseOpportunitySchema = z.object({
   seoTitle: z.string().optional().nullable(),
   metaDescription: z.string().optional().nullable(),
   seoKeywords: z.string().optional().nullable(),
-  displayOrder: z.number().optional().default(0),
+  displayOrder: z.coerce.number().optional().default(0),
 });
 
 export const updateFranchiseOpportunitySchema = createFranchiseOpportunitySchema.partial();

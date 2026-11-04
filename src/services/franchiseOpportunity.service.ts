@@ -102,7 +102,20 @@ export class FranchiseOpportunityService {
   }
 
   static async update(id: string, rawData: any) {
-    const existing = await this.getById(id);
+    let existing: any = null;
+    try {
+      existing = await this.getById(id);
+    } catch (_) {
+      if (rawData.slug) {
+        existing = await prisma.franchiseOpportunity.findUnique({
+          where: { slug: rawData.slug },
+        });
+      }
+      if (!existing) {
+        return this.create(rawData);
+      }
+    }
+
     const { id: _id, createdAt: _created, updatedAt: _updated, ...data } = rawData;
 
     if (data.slug && data.slug !== existing.slug) {

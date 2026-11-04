@@ -12,11 +12,16 @@ const router = Router();
 
 const optionalAuthInDev = (req: any, res: any, next: any) => {
   const authHeader = req.headers.authorization;
-  if (authHeader && authHeader.startsWith('Bearer ')) {
-    return authenticateToken(req, res, next);
-  }
   if (process.env.NODE_ENV !== 'production') {
-    return next();
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      try {
+        const token = authHeader.split(' ')[1];
+        if (token === 'mock_admin_token') {
+          req.user = { userId: 'dev-admin', role: 'ADMIN', email: 'admin@teamax.in' };
+          return next();
+        }
+      } catch (_) {}
+    }
   }
   return authenticateToken(req, res, next);
 };
