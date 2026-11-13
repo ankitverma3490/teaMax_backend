@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import compression from 'compression';
 import { config } from './config/env';
 import apiV1Routes from './routes';
+import franchiseInquiryRoutes from './routes/franchiseInquiry.routes';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 import prisma from './utils/prisma';
 
@@ -86,6 +87,9 @@ export const createApp = (): Application => {
       },
     });
   });
+
+  // Direct alias for franchise inquiry endpoint (POST /api/franchise/inquiry)
+  app.use('/api/franchise', franchiseInquiryRoutes);
 
   // Mount API v1 router
   app.use('/api/v1', apiV1Routes);

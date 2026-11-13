@@ -25,4 +25,5 @@ export const config = {
       process.env.CLOUDINARY_API_SECRET !== 'your_regenerated_api_secret'
     ),
   },
+  pabblyHookUrl: process.env.PABBLY_HOOK_URL || '',
 };
