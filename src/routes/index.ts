@@ -12,11 +12,13 @@ import uploadRoutes from './upload.routes';
 import settingRoutes from './setting.routes';
 import franchiseOpportunityRoutes from './franchiseOpportunity.routes';
 import franchiseInquiryRoutes from './franchiseInquiry.routes';
+import teamRoutes from './team.routes';
 
 const router = Router();
 
 // Mount API v1 route modules
 router.use('/auth', authRoutes);
+router.use('/team', teamRoutes);
 router.use('/categories', categoryRoutes);
 router.use('/menu-items', menuItemRoutes);
 router.use('/centres', centreRoutes);

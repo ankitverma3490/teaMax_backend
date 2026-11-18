@@ -6,6 +6,8 @@ export interface AuthUserPayload {
   email: string;
   role: Role;
   name: string;
+  designation?: string | null;
+  permissions?: string[] | null;
 }
 
 export interface AuthenticatedRequest extends Request {

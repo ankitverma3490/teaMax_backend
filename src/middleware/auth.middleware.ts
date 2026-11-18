@@ -58,3 +58,46 @@ export const requireRoles = (...roles: Role[]) => {
     next();
   };
 };
+
+export const requireSuperAdmin = (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  if (!req.user) {
+    return next(new AppError('Authentication required.', 401));
+  }
+
+  if (req.user.role !== Role.SUPER_ADMIN && req.user.role !== Role.ADMIN) {
+    return next(
+      new AppError('Forbidden: Only Super Administrators can perform this action.', 403)
+    );
+  }
+
+  next();
+};
+
+export const requirePermission = (permission: string) => {
+  return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    if (!req.user) {
+      return next(new AppError('Authentication required.', 401));
+    }
+
+    // Super Admin & Admin have unrestricted access to all modules
+    if (req.user.role === Role.SUPER_ADMIN || req.user.role === Role.ADMIN) {
+      return next();
+    }
+
+    const permissions = req.user.permissions || [];
+    if (!permissions.includes(permission) && !permissions.includes('all')) {
+      return next(
+        new AppError(
+          `Forbidden: You do not have permission to access '${permission}'. Please contact your administrator.`,
+          403
+        )
+      );
+    }
+
+    next();
+  };
+};

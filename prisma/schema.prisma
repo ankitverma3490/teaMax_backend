@@ -23,6 +23,8 @@ model User {
   phone        String?
   avatar       String?
   department   String?
+  designation  String?
+  permissions  Json?
   timezone     String?   @default("Asia/Kolkata")
   currency     String?   @default("₹ INR")
   status       String    @default("active")

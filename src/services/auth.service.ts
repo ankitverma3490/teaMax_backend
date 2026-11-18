@@ -42,6 +42,8 @@ export class AuthService {
         phone: true,
         avatar: true,
         department: true,
+        designation: true,
+        permissions: true,
         timezone: true,
         currency: true,
         createdAt: true,
@@ -53,6 +55,8 @@ export class AuthService {
       email: user.email,
       role: user.role,
       name: user.name,
+      designation: user.designation,
+      permissions: (user.permissions as string[]) || null,
     });
 
     return { user, token };
@@ -84,6 +88,8 @@ export class AuthService {
       email: user.email,
       role: user.role,
       name: user.name,
+      designation: user.designation,
+      permissions: (user.permissions as string[]) || null,
     });
 
     const { passwordHash: _, ...safeUser } = user;
@@ -102,6 +108,8 @@ export class AuthService {
         phone: true,
         avatar: true,
         department: true,
+        designation: true,
+        permissions: true,
         timezone: true,
         currency: true,
         status: true,
@@ -135,6 +143,8 @@ export class AuthService {
         phone: true,
         avatar: true,
         department: true,
+        designation: true,
+        permissions: true,
         timezone: true,
         currency: true,
         status: true,
